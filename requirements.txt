@@ -1,0 +1,5 @@
+psycopg[binary]
+reportlab
+tzdata
+streamlit
+pypdf
