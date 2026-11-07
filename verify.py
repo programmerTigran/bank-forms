@@ -1,7 +1,7 @@
 import re
 from io import BytesIO
 from pypdf import PdfReader
-from app import build_values, load_template, fill_blocks, make_rtf, make_pdf
+from app import build_values, get_customer, load_template, fill_blocks, make_rtf, make_pdf
 
 def rtf_to_text(rtf_bytes):
     text = rtf_bytes.decode("ascii")
@@ -22,7 +22,8 @@ template = load_template("customer_details")
 failures = 0
 
 for customer_id in range(1, 11):
-    values = build_values(customer_id)
+    first_name, surname = get_customer(customer_id)
+    values = build_values(first_name, surname)
     blocks = fill_blocks(template, values)
     texts = {
         "RTF": rtf_to_text(make_rtf(template, blocks)),
