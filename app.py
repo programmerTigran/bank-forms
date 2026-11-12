@@ -3,10 +3,12 @@ from zoneinfo import ZoneInfo
 from io import BytesIO
 from html import escape
 import json
+import re
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+import pdfplumber
 import psycopg
 import streamlit as st
 
@@ -39,32 +41,12 @@ def get_customer(customer_id):
         row = cur.fetchone()
         return row
 
-#Save A New Customer
-def add_customer(first_name, surname):
-    with psycopg.connect() as conn:
-        cur=conn.cursor()
-        cur.execute("SELECT 1 FROM customers " \
-                    "WHERE LOWER(first_name)=LOWER(%s) AND LOWER(surname)=LOWER(%s)",
-                    (first_name,surname))
-        if cur.fetchone():
-            raise ValueError("This customer already exists")
-        cur.execute("INSERT INTO customers (customer_id,first_name,surname) " \
-                    "SELECT COALESCE(MAX(customer_id),0)+1, %s, %s " \
-                    "FROM customers " \
-                    "RETURNING customer_id",
-                    (first_name,surname))
-        new_id=cur.fetchone()[0]
-        conn.commit()
-    with open("customers.csv","a",newline="",encoding="utf-8") as f:
-        csv.writer(f).writerow([new_id,first_name,surname])
-    return new_id
-
 #Date
 def today_armenia():
     now = datetime.now(ZoneInfo("Asia/Yerevan"))
     return now.strftime("%d/%m/%Y")
 
-#Fetches Newest Form
+#Fetches Gets The Newest Form
 def load_template(name):
     with psycopg.connect() as conn:
         cur=conn.cursor()
@@ -82,7 +64,7 @@ def load_template(name):
             definition=json.loads(definition)
         return definition
 
-#Files One Line Of The Info
+#Files Exactly One Line Of The Info
 def fill_text(text,values):
     for key,value in values.items():
         text = text.replace("{{" + key + "}}", str(value))
@@ -97,7 +79,7 @@ def fill_blocks(template,values):
         filled.append(new_block)
     return filled
 
-#Value Building (now takes the names directly, so it works for manual entry too)
+#Value Building
 def build_values(first_name, surname):
     return {"first_name":first_name,
             "surname":surname,
@@ -161,7 +143,6 @@ def make_pdf(template, blocks):
         else:
             font = "DejaVuSans"
         y = y - size
-        #New page when the text would go under the bottom margin
         if y < margin:
             pdf.showPage()
             y = height - margin - size
@@ -176,7 +157,103 @@ def make_pdf(template, blocks):
     pdf.save()
     return buffer.getvalue()
 
-#Preview (looks like a white paper page)
+#Pieces Of An RTF File
+RTF_TOKEN = re.compile(r"\\u(-?\d+)\??|\\([a-z]+)(-?\d+)? ?|\\([\\{}])|[{}]|([^\\{}]+)")
+
+#RTF Bytes --> (Template, Blocks)
+def rtf_to_blocks(data):
+    rtf = data.decode("latin-1")
+    start = rtf.find("\\pard")
+    if start == -1:
+        raise ValueError("No text found. Only RTF files made by this app can be converted.")
+    font = re.search(r"\{\\f0 ([^;]*);\}", rtf)
+    margin = re.search(r"\\margl(\d+)", rtf)
+    template = {"font": font.group(1) if font else "DejaVu Sans",
+                "page": {"margin_pt": int(margin.group(1)) // 20 if margin else 72}}
+    aligns = {"ql": "left", "qc": "center", "qr": "right"}
+    blocks = []
+    align, space, size, bold = "left", 0, 12, False
+    text, block_bold = "", False
+    for m in RTF_TOKEN.finditer(rtf[start:]):
+        unicode_code, word, number, escaped, plain = m.groups()
+        if unicode_code is not None:
+            code = int(unicode_code)
+            if code < 0:
+                code += 65536
+            text += chr(code)
+            block_bold = block_bold or bold
+        elif escaped is not None:
+            text += escaped
+            block_bold = block_bold or bold
+        elif plain is not None:
+            text += plain
+            block_bold = block_bold or bold
+        elif word:
+            if word == "pard":
+                align, space = "left", 0
+            elif word in aligns:
+                align = aligns[word]
+            elif word == "sa" and number:
+                space = int(number) // 20
+            elif word == "fs" and number:
+                size = int(number) // 2
+            elif word == "b":
+                bold = number != "0"
+            elif word == "par":
+                blocks.append({"text": text, "align": align, "size": size,
+                               "bold": block_bold, "space_after": space})
+                text, block_bold = "", False
+    if not blocks:
+        raise ValueError("No text found in this RTF.")
+    return template, blocks
+
+#PDF Bytes --> (Template, Blocks)
+def pdf_to_blocks(data):
+    lines = []
+    with pdfplumber.open(BytesIO(data)) as pdf:
+        for page in pdf.pages:
+            page_lines = page.extract_text_lines()
+            for i, line in enumerate(page_lines):
+                first = next((c for c in line["chars"] if c["text"].strip()), None)
+                if first is None:
+                    continue
+                lines.append({"text": line["text"].strip(),
+                              "x0": line["x0"], "x1": line["x1"],
+                              "baseline": first["matrix"][5],
+                              "size": round(first["size"]),
+                              "bold": "bold" in first["fontname"].lower(),
+                              "width": page.width,
+                              "last_on_page": i == len(page_lines) - 1})
+    if not lines:
+        raise ValueError("No text found in this PDF.")
+    margin = round(min(l["x0"] for l in lines))
+    template = {"font": "DejaVu Sans", "page": {"margin_pt": margin}}
+    blocks = []
+    for i, l in enumerate(lines):
+        centre = (l["x0"] + l["x1"]) / 2
+        if abs(centre - l["width"] / 2) < 3:
+            align = "center"
+        elif abs(l["x1"] - (l["width"] - margin)) < 3:
+            align = "right"
+        else:
+            align = "left"
+        space = 0
+        if not l["last_on_page"] and i + 1 < len(lines):
+            nxt = lines[i + 1]
+            space = max(0, round(l["baseline"] - nxt["baseline"] - nxt["size"]))
+        blocks.append({"text": l["text"], "align": align, "size": l["size"],
+                       "bold": l["bold"], "space_after": space})
+    return template, blocks
+
+def rtf_to_pdf(data):
+    template, blocks = rtf_to_blocks(data)
+    return make_pdf(template, blocks)
+
+def pdf_to_rtf(data):
+    template, blocks = pdf_to_blocks(data)
+    return make_rtf(template, blocks)
+
+#Preview (Show Us Information About Selected Customer)
 def show_preview(template, blocks):
     margin = template["page"]["margin_pt"]
     html = "<div style='background:white;color:black;padding:" + str(margin) + "px;min-height:500px;max-width:794px;margin:auto;box-shadow:0 2px 12px rgba(0,0,0,0.15);font-family:" + escape(str(template["font"])) + ",Arial,sans-serif;'>"
@@ -193,35 +270,20 @@ def show_preview(template, blocks):
 st.set_page_config(page_title="Bank forms", page_icon="📄")
 st.title("Bank customer form")
 
-source = st.radio("Customer", ["Existing customer", "Enter manually"], horizontal=True)
-
 first_name = ""
 surname = ""
 
-if source == "Existing customer":
-    try:
-        ids = get_customer_ids()
-        if not ids:
-            st.warning("No customers in the database.")
-        else:
-            customer_id = st.selectbox("Customer id", ids)
-            first_name, surname = get_customer(customer_id)
-    except Exception as e:
-        st.error("Database error: " + str(e))
-else:
-    first_name = st.text_input("First name")
-    surname = st.text_input("Surname")
-    if st.button("Save customer to database"):
-        if first_name.strip() and surname.strip():
-            try:
-                new_id = add_customer(first_name.strip(), surname.strip())
-                st.success("Saved. Customer id: " + str(new_id))
-            except Exception as e:
-                st.error("Could not save: " + str(e))
-        else:
-            st.warning("Type a first name and surname first.")
+try:
+    ids = get_customer_ids()
+    if not ids:
+        st.warning("No customers in the database.")
+    else:
+        customer_id = st.selectbox("Customer id", ids)
+        first_name, surname = get_customer(customer_id)
+except Exception as e:
+    st.error("Database error: " + str(e))
 
-#Template Choice
+#Template Choice(One Of The Templates Is For The Customer(Print))
 template_name = None
 try:
     template_names = get_template_names()
@@ -232,11 +294,7 @@ try:
 except Exception as e:
     st.error("Database error: " + str(e))
 
-if source == "Existing customer":
-    formats = ["RTF", "PDF"]
-else:
-    formats = ["RTF"]
-fmt = st.radio("Format", formats, horizontal=True)
+fmt = st.radio("Format", ["RTF", "PDF"], horizontal=True)
 
 if first_name and surname and template_name:
     try:
@@ -262,4 +320,30 @@ if first_name and surname and template_name:
     except Exception as e:
         st.error("Could not make the document: " + str(e))
 else:
-    st.info("Pick a customer or type a first name and surname.")
+    st.info("Pick a customer.")
+
+#Convertation From RTF/PDF to PDF/RTF
+st.divider()
+st.subheader("Convert a file")
+uploaded = st.file_uploader("Upload an RTF or PDF made by this app", type=["rtf", "pdf"])
+if uploaded:
+    try:
+        file_data = uploaded.getvalue()
+        if uploaded.name.lower().endswith(".pdf"):
+            st.download_button(
+                label="Download as RTF",
+                data=pdf_to_rtf(file_data),
+                file_name="converted.rtf",
+                mime="application/rtf",
+                width="stretch",
+            )
+        else:
+            st.download_button(
+                label="Download as PDF",
+                data=rtf_to_pdf(file_data),
+                file_name="converted.pdf",
+                mime="application/pdf",
+                width="stretch",
+            )
+    except Exception as e:
+        st.error("Could not convert: " + str(e))

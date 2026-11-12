@@ -1,16 +1,37 @@
 # Bank customer forms
 
-A small Streamlit app for filling in customer forms. Pick an existing customer or type a name by hand, choose a template, and download the finished document as RTF or PDF. Customers and templates live in PostgreSQL, so changing a layout never means touching the code. All data is synthetic.
+This is a small Streamlit app that fills in customer forms. I pick a customer, choose a template and download the finished document as RTF or PDF. The customers and templates are stored in PostgreSQL, so changing a layout does not need any change in the code. All the data is synthetic.
+
+## Stack
+
+- **Streamlit**: one small Python app for the screen and the logic. There is no separate frontend, no queue and no microservices.
+- **PostgreSQL 17** in Docker, used through `psycopg`. It stores the customers and the versioned templates. All queries are parameterized.
+- **ReportLab**: writes the PDF.
+- **RTF**: I write it by hand as plain text, so it needs no library.
+- **pdfplumber**: reads PDFs back, used only by the converter.
+- **pgAdmin**: used only to administer the database.
+- The database credentials come from environment variables (`PG...`) and are never written in the code.
+
+## How the documents are made
+
+One stored template produces both formats, so they always match.
+
+1. The template is a JSON definition in the `document_templates` table (name, version, definition). It holds the page margin, the font and a list of blocks. Each block has its text, alignment, size, bold flag and the space after it. The text contains placeholders like `{{first_name}}`, `{{surname}}` and `{{current_date}}`.
+2. The app loads the highest version of the chosen template and replaces the placeholders with the name and surname of the customer. The date is the day of generation in the Asia/Yerevan timezone, written as DD/MM/YYYY.
+3. The filled blocks go to two renderers:
+   - **RTF**: each block becomes one RTF paragraph with the same alignment, size, bold and spacing. Characters outside ASCII (Armenian, for example) are written as `\uN?` escapes, so the Unicode text is kept.
+   - **PDF**: ReportLab draws each block on an A4 page with the same margin, size and alignment. It embeds DejaVu Sans, which has the Armenian letters.
+4. Generation is synchronous. The file goes straight to the browser as a download and nothing is archived.
 
 ## Features
 
-- Existing customer (dropdown from the database) or manual entry
-- New customers can be saved to the database, and each one is also appended to `customers.csv`
-- The same first name and surname (any upper/lower case) cannot be saved twice
+- Customer dropdown filled from the database
 - Template dropdown, always using the highest version of each template
-- White-paper preview before download
-- RTF and PDF for existing customers, RTF only for manual entry
-- Database errors show as messages instead of crashing the app
+- White-paper preview before the download
+- Download as RTF or PDF, both made from the same stored template
+- Armenian and other Unicode text works in both formats
+- Converter: upload an RTF or PDF made by this app and download it as the other format
+- Database errors are shown as messages and do not crash the app
 
 ## What you need first
 
@@ -30,11 +51,11 @@ A small Streamlit app for filling in customer forms. Pick an existing customer o
 
 To start the database again later: `docker start sales_lab_db`
 
-The app always takes the highest version of a template. For a new layout, add a row with a higher version number and leave the old one alone.
+The app always takes the highest version of a template. For a new layout, I add a row with a higher version number and leave the old one as it is.
 
 ## Database settings
 
-The app reads its connection details from environment variables, so no password sits in the code:
+The app reads the connection details from environment variables, so no password is written in the code:
 
 ```
 export PGHOST=localhost
@@ -54,13 +75,13 @@ pip install -r requirements.txt
 
 ## PDF fonts
 
-The PDF writer embeds DejaVu Sans, so Armenian letters show correctly. The app expects the font files in `/usr/share/fonts/truetype/dejavu/`. Check with:
+The PDF writer embeds DejaVu Sans, so the Armenian letters show correctly. The app expects the font files in `/usr/share/fonts/truetype/dejavu/`. To check:
 
 ```
 ls /usr/share/fonts/truetype/dejavu/
 ```
 
-You need `DejaVuSans.ttf` and `DejaVuSans-Bold.ttf`. If they are missing:
+`DejaVuSans.ttf` and `DejaVuSans-Bold.ttf` must be there. If they are missing:
 
 ```
 sudo apt install fonts-dejavu-core
@@ -72,7 +93,23 @@ sudo apt install fonts-dejavu-core
 streamlit run app.py
 ```
 
-Then open http://localhost:8501 in your browser.
+Then open the address Streamlit prints. It is usually http://localhost:8501, and Streamlit uses 8502 if 8501 is busy.
+
+## Files
+
+Every file except `app.py` is short, so I described only `app.py` here.
+
+`app.py` has four parts:
+- **Database functions**: get the customer ids, the template names, one customer and the newest version of a template.
+- **Filling the template**: replaces the placeholders in each block with the real values.
+- **Renderers**: `make_rtf` builds the RTF and `make_pdf` builds the PDF from the filled blocks.
+- **Page and converter**: the Streamlit screen with the preview and the download buttons, and the converter at the bottom.
+
+## Converting files
+
+At the bottom of the page I can upload an RTF or PDF and download it as the other format.
+
+This works only for files made by this app. The RTF reader expects the exact structure this app writes. The PDF reader guesses bold, size and alignment from the position of the text. Files from Word or other tools and scanned PDFs are not supported.
 
 ## Syncing customers.csv
 
@@ -84,7 +121,7 @@ python sync_csv.py
 
 ## Checking the output
 
-`verify.py` generates both formats for the customers, reads the files back, and checks that the name, surname and date are inside each one.
+`verify.py` generates both formats for the customers, reads the files back and checks that the name, surname and date are inside each one.
 
 ```
 python verify.py
