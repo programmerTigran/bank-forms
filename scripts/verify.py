@@ -2,8 +2,9 @@ import re
 from io import BytesIO
 from pypdf import PdfReader
 from db import get_customer, load_template
-from documents import build_values, fill_blocks, make_rtf, make_pdfdef rtf_to_text(rtf_bytes):
-  
+from documents import build_values, fill_blocks, make_rtf, make_pdf
+
+def rtf_to_text(rtf_bytes):  
     text = rtf_bytes.decode("ascii")
     return re.sub(r"\\u(\d+)\?", lambda m: chr(int(m.group(1))), text)
 
