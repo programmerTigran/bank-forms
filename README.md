@@ -111,18 +111,18 @@ At the bottom of the page I can upload an RTF or PDF and download it as the othe
 
 This works only for files made by this app. The RTF reader expects the exact structure this app writes. The PDF reader guesses bold, size and alignment from the position of the text. Files from Word or other tools and scanned PDFs are not supported.
 
-## Syncing customers.csv
+## Syncing data/customers.csv
 
-`sync_csv.py` rewrites `customers.csv` from the database, so the file matches the `customers` table exactly. It overwrites the file.
+`scripts/sync_csv.py` rewrites `data/customers.csv` from the database, so the file matches the `customers` table exactly. It overwrites the file.
 
 ```
-python sync_csv.py
+python scripts/sync_csv.py
 ```
 
 ## Checking the output
 
-`verify.py` generates both formats for the customers, reads the files back and checks that the name, surname and date are inside each one.
+`scripts/verify.py` generates both formats for the customers, reads the files back and checks that the name, surname and date are inside each one.
 
 ```
-python verify.py
+python scripts/verify.py
 ```
