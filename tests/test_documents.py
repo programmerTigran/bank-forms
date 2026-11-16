@@ -21,7 +21,7 @@ class DocumentTests(unittest.TestCase):
         self.assertEqual(filled[0]["text"], "Hello Աննա")
         self.assertEqual(template["blocks"][0]["text"], "Hello {{first_name}}")
 
-    def test_rtf_escape_handles_arm Armenian_characters(self):
+    def test_rtf_escape_handles_armenian_characters(self):
         self.assertEqual(rtf_escape("Ա"), "\\u1329?")
 
 
