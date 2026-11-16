@@ -1,0 +1,10 @@
+{
+  "page": {"size": "A4", "margin_pt": 72},
+  "font": "DejaVu Sans",
+  "blocks": [
+    {"text": "CUSTOMER DETAILS", "size": 16, "bold": true, "align": "center", "space_after": 24},
+    {"text": "Customer name: {{first_name}}", "size": 12, "bold": false, "align": "left", "space_after": 8},
+    {"text": "Customer surname: {{surname}}", "size": 12, "bold": false, "align": "left", "space_after": 8},
+    {"text": "Date: {{current_date}}", "size": 12, "bold": false, "align": "left", "space_after": 0}
+  ]
+}

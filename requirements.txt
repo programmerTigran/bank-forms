@@ -4,3 +4,6 @@ tzdata
 streamlit
 pdfplumber
 sqlalchemy
+python-dotenv
+pandas
+pypdf
