@@ -1,4 +1,15 @@
+# Secrets
+.env
+.streamlit/secrets.toml
+
+# Python
 .venv/
 __pycache__/
+*.pyc
+
+# Archives and OS junk
 *.zip
-*.csv
+.DS_Store
+
+
+printf '\n.env\n.venv/\n__pycache__/\n*.pyc\n' >> .gitignore
