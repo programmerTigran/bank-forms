@@ -1,0 +1,19 @@
+{
+  "title": "Transaction statement",
+  "query": "tx_between",
+  "inputs": ["customer", "dates", "filters"],
+  "info_lines": [
+    "Customer: {{first_name}} {{surname}} (ID {{customer_id}})",
+    "Period: {{date_from}} - {{date_to}}",
+    "Transactions: {{count}}"
+  ],
+  "columns": [
+    {"label": "Date", "field": "tx_date", "type": "date", "width": 1},
+    {"label": "Type", "field": "tx_type", "width": 1.2},
+    {"label": "Amount", "field": "amount", "type": "money", "align": "right", "width": 1.3},
+    {"label": "Description", "field": "description", "width": 3}
+  ],
+  "empty_text": "No transactions in this period.",
+  "header": null,
+  "footer": null
+}

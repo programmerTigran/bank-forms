@@ -1,6 +1,12 @@
 psycopg[binary]
+psycopg[pool]
+psycopg-pool==3.3.3
 reportlab
 tzdata
 streamlit
-pdfplumber
+streamlit-searchbox
 sqlalchemy
+pytest
+pypandoc_binary==1.17
+python-docx==1.2.0
+python-dotenv

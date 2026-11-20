@@ -1,0 +1,10 @@
+{
+  "title": "Balance certificate",
+  "inputs": ["customer", "date"],
+  "query": "balance_on_date",
+  "paragraphs": [
+    "This is to certify that {{first_name}} {{surname}} is a customer of {{company_name}}.",
+    "The account balance on {{as_of}} is {{balance}} AMD.",
+    "This certificate is issued upon the customer's request."
+  ]
+}

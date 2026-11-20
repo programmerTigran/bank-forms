@@ -1,0 +1,36 @@
+ .gitignore                                                         |   8 [32m+[m[31m-[m
+ README.md                                                          | 210 [32m++++++[m[31m----[m
+ app.py                                                             | 413 [32m+++++++++++++[m[31m-----[m
+ data/customers.csv                                                 |  12 [31m-[m
+ data/logos/Adidas_logo.png:Zone.Identifier                         | Bin [31m212[m -> [32m0[m bytes
+ .../Application_for_Credit_Transfer_Report_-_Grading_Scale.pdf     | Bin [31m1639243[m -> [32m0[m bytes
+ ..._for_Credit_Transfer_Report_-_Grading_Scale.pdf:Zone.Identifier | Bin [31m345[m -> [32m0[m bytes
+ ...llustration-with-red-background-free-vector.jpg:Zone.Identifier | Bin [31m264[m -> [32m0[m bytes
+ data/template_v1.csv                                               |   6 [31m-[m
+ db.py                                                              | 210 [32m++++++++[m[31m--[m
+ demo_orm.py                                                        |  21 [31m-[m
+ documents.py                                                       | 672 [32m++[m[31m----------------------------[m
+ models.py                                                          |  14 [32m+[m[31m-[m
+ pages/companies.py                                                 | 161 [32m++++[m[31m---[m
+ pages/statements.py                                                | 122 [31m------[m
+ queries.py                                                         |   4 [32m+[m[31m-[m
+ queries/query_no1.py                                               |  26 [31m--[m
+ requirements.txt                                                   |  10 [32m+[m[31m-[m
+ scripts/seed_demo.py                                               | 110 [32m++[m[31m---[m
+ scripts/sync_csv.py                                                |  48 [31m---[m
+ scripts/verify.py                                                  |  87 [31m----[m
+ sql/company_customer_count.sql                                     |   4 [31m-[m
+ sql/company_customers.sql                                          |  13 [31m-[m
+ sql/company_direction_totals.sql                                   |   6 [31m-[m
+ sql/company_logo.sql                                               |   1 [31m-[m
+ sql/company_summary.sql                                            |  14 [31m-[m
+ sql/company_type_totals.sql                                        |   6 [31m-[m
+ sql/customer_get.sql                                               |   4 [31m-[m
+ sql/customers_search.sql                                           |   6 [31m-[m
+ sql/template_load.sql                                              |   4 [31m-[m
+ sql/template_names.sql                                             |   1 [31m-[m
+ sql/tx_between.sql                                                 |  11 [31m-[m
+ sql/tx_count.sql                                                   |   6 [31m-[m
+ sql/tx_search.sql                                                  |   8 [31m-[m
+ test_orm.py                                                        |   8 [31m-[m
+ 35 files changed, 771 insertions(+), 1455 deletions(-)

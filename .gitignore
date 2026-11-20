@@ -1,15 +1,19 @@
 # Secrets
 .env
+*.db
 .streamlit/secrets.toml
 
 # Python
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Archives and OS junk
+# Backups, archives and OS junk
+backups/
+*.backup
 *.zip
 .DS_Store
-
+*Zone.Identifier
 
 printf '\n.env\n.venv/\n__pycache__/\n*.pyc\n' >> .gitignore

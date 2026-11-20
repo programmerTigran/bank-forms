@@ -1,8 +1,8 @@
-"""Loads SQL from sql/<name>.sql. Cached after first read."""
+"""Loads SQL from sql/queries/<name>.sql. Cached after first read."""
 from functools import lru_cache
 from pathlib import Path
 
-SQL_DIR = Path(__file__).parent / "sql"
+SQL_DIR = Path(__file__).parent / "sql" / "queries"
 
 
 @lru_cache(maxsize=None)

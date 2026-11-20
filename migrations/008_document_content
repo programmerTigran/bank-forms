@@ -1,0 +1,5 @@
+-- 008: every issued document keeps its content (what the document said), as JSON.
+-- So more file types (PDF, DOCX, RTF, CSV) can be added to the same number later and always match.
+-- Documents issued before this change have no content; they already have all their files.
+ALTER TABLE document_log ADD COLUMN IF NOT EXISTS content JSONB;
+CREATE INDEX IF NOT EXISTS idx_document_log_same ON document_log (form_name, form_version, customer_id);  

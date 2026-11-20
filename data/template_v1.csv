@@ -1,6 +1,0 @@
-text,size,bold,align,space_after
-CUSTOMER DETAILS,16,true,center,24
-Customer name: {{first_name}},12,false,left,8
-Customer surname: {{surname}},12,false,left,8
-Company: {{company_name}},12,false,left,8
-Date: {{current_date}},12,false,left,0

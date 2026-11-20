@@ -1,0 +1,1 @@
+SELECT fmt FROM document_files WHERE doc_no = %(doc_no)s ORDER BY fmt
