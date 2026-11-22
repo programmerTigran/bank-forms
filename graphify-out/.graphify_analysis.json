@@ -1,0 +1,868 @@
+{
+  "communities": {
+    "0": [
+      "app",
+      "app_input_date",
+      "app_input_dates",
+      "app_input_filters",
+      "app_input_transaction",
+      "app_issued_page",
+      "app_main",
+      "app_new_form_dialog",
+      "app_py_dialog",
+      "app_rationale_1",
+      "app_rationale_299",
+      "app_rationale_77",
+      "app_rationale_82",
+      "app_rationale_94",
+      "db_count_customer_transactions",
+      "db_get_company_direction_totals",
+      "db_get_company_type_totals",
+      "db_log_audit",
+      "db_rationale_146",
+      "db_rationale_151",
+      "db_rationale_160",
+      "db_rationale_167",
+      "db_rationale_86",
+      "db_search_customer_transactions",
+      "documents_money",
+      "documents_money_cur",
+      "documents_rationale_47",
+      "documents_rationale_55",
+      "form_store_build_definition",
+      "form_store_rationale_92",
+      "pages_companies",
+      "pages_companies_cached_customer_count",
+      "pages_companies_cached_customers",
+      "pages_companies_cached_logo",
+      "pages_companies_cached_summary",
+      "pages_companies_main",
+      "pages_companies_py_cache_data",
+      "pages_companies_py_dialog",
+      "pages_companies_rationale_1",
+      "pages_companies_rationale_115",
+      "pages_companies_rationale_126",
+      "pages_companies_rationale_156",
+      "pages_companies_rationale_54",
+      "pages_companies_rationale_81",
+      "pages_companies_rationale_86",
+      "pages_companies_set_view",
+      "pages_companies_show_amounts",
+      "pages_companies_show_company",
+      "pages_companies_show_customer_row",
+      "pages_companies_show_customers",
+      "pages_companies_show_transactions",
+      "pages_companies_toggle_all_companies",
+      "service_as_of_inputs",
+      "service_date_range_inputs",
+      "service_rationale_97",
+      "service_transaction_inputs",
+      "streamlit",
+      "streamlit_searchbox",
+      "ui",
+      "ui_current_user",
+      "ui_fields_help",
+      "ui_login_box",
+      "ui_rationale_1",
+      "ui_rationale_131",
+      "ui_rationale_20",
+      "ui_rationale_27",
+      "ui_rationale_47",
+      "ui_require_login",
+      "ui_show_error"
+    ],
+    "1": [
+      "db_count_custom_rows",
+      "db_count_custom_tables",
+      "db_rationale_246",
+      "db_search_custom_tables",
+      "form0_format_cell",
+      "form0_rationale_70",
+      "math",
+      "pages_tables",
+      "pages_tables_bump",
+      "pages_tables_done",
+      "pages_tables_gen",
+      "pages_tables_main",
+      "pages_tables_py_cache_data",
+      "pages_tables_rationale_1",
+      "pages_tables_rationale_37",
+      "pages_tables_rationale_44",
+      "pages_tables_rationale_81",
+      "pages_tables_rationale_85",
+      "pages_tables_read_cached",
+      "pages_tables_show_list",
+      "pages_tables_show_new_table",
+      "pages_tables_show_rtf_import",
+      "pages_tables_show_table",
+      "pages_tables_toggle_all",
+      "pages_tables_unique",
+      "pandas",
+      "rtf_import_apply_plan",
+      "rtf_import_rationale_208",
+      "service_add_rows",
+      "service_create_table",
+      "service_delete_table",
+      "service_fetch_rows",
+      "service_get_table",
+      "service_import_csv",
+      "service_rationale_249",
+      "service_rationale_259",
+      "service_rationale_307",
+      "service_rationale_316",
+      "service_rationale_338",
+      "service_rationale_348",
+      "service_rationale_355",
+      "service_table_rows",
+      "service_typed",
+      "ui_rationale_63",
+      "ui_table_fields"
+    ],
+    "2": [
+      "api",
+      "api_admin_only",
+      "api_bad_input",
+      "api_companies",
+      "api_create_form",
+      "api_customers",
+      "api_documents",
+      "api_download",
+      "api_formbody",
+      "api_forms",
+      "api_health",
+      "api_issue",
+      "api_issuebody",
+      "api_rationale_1",
+      "api_rationale_77",
+      "api_server_error",
+      "app_customer_label",
+      "app_input_customer",
+      "app_rationale_48",
+      "app_search_customer_labels",
+      "basemodel",
+      "db_get_company_summary",
+      "db_get_issued_files",
+      "db_like",
+      "db_rationale_100",
+      "db_rationale_129",
+      "db_rationale_205",
+      "db_rationale_211",
+      "db_rationale_63",
+      "db_search_customers",
+      "db_search_issued",
+      "exception_handler",
+      "fastapi",
+      "fastapi_responses",
+      "fastapi_security",
+      "get",
+      "logging",
+      "post",
+      "pydantic",
+      "service_amount_or_none",
+      "service_filter_inputs",
+      "service_rationale_44"
+    ],
+    "3": [
+      "armenian_encoding",
+      "armenian_encoding_fix",
+      "armenian_encoding_fonitech_to_unicode",
+      "armenian_encoding_looks_fonitech",
+      "armenian_encoding_rationale_55",
+      "armenian_encoding_rationale_59",
+      "armenian_encoding_rationale_67",
+      "re",
+      "rtf_import",
+      "rtf_import_block_lines",
+      "rtf_import_build_form",
+      "rtf_import_build_row",
+      "rtf_import_build_table",
+      "rtf_import_decide",
+      "rtf_import_default_name",
+      "rtf_import_fix_text",
+      "rtf_import_guess_type",
+      "rtf_import_hits",
+      "rtf_import_inline_text",
+      "rtf_import_known_names",
+      "rtf_import_norm",
+      "rtf_import_rationale_1",
+      "rtf_import_rationale_112",
+      "rtf_import_rationale_123",
+      "rtf_import_rationale_132",
+      "rtf_import_rationale_144",
+      "rtf_import_rationale_152",
+      "rtf_import_rationale_188",
+      "rtf_import_rationale_218",
+      "rtf_import_rationale_31",
+      "rtf_import_rationale_55",
+      "rtf_import_rationale_73",
+      "rtf_import_rationale_83",
+      "rtf_import_read_rtf",
+      "rtf_import_save_plan",
+      "rtf_import_slug",
+      "rtf_import_table_cells",
+      "service_cell_value",
+      "service_clean_rows",
+      "service_rationale_267",
+      "service_rationale_293"
+    ],
+    "4": [
+      "db_create_custom_table",
+      "db_fetchone",
+      "db_get_company_customer_count",
+      "db_get_company_logo",
+      "db_get_company_logo_by_id",
+      "db_get_custom_table",
+      "db_get_rtf_file",
+      "db_get_user",
+      "db_rationale_110",
+      "db_rationale_115",
+      "db_rationale_140",
+      "db_rationale_220",
+      "db_rationale_236",
+      "db_rationale_256",
+      "db_rationale_289",
+      "db_rationale_295",
+      "db_rationale_77",
+      "db_save_rtf_file",
+      "db_transaction_belongs",
+      "functools",
+      "queries",
+      "queries_load",
+      "queries_rationale_1",
+      "queries_rationale_17",
+      "queries_read"
+    ],
+    "5": [
+      "csv",
+      "docx",
+      "docx_enum_text",
+      "docx_oxml",
+      "docx_oxml_ns",
+      "docx_shared",
+      "form0",
+      "form0_add_currency",
+      "form0_make_csv",
+      "form0_rationale_1",
+      "form0_rationale_117",
+      "form0_rationale_150",
+      "form0_rationale_476",
+      "form0_total_row",
+      "html",
+      "io",
+      "reportlab_lib_colors",
+      "reportlab_lib_pagesizes",
+      "reportlab_lib_styles",
+      "reportlab_lib_utils",
+      "reportlab_platypus"
+    ],
+    "6": [
+      "api_form",
+      "app_create_form_section",
+      "app_make_page",
+      "app_rationale_142",
+      "db_issue_document",
+      "db_rationale_187",
+      "form0_rationale_110",
+      "form0_unfilled_placeholders",
+      "form_store_list_versions",
+      "form_store_load_form",
+      "form_store_rationale_59",
+      "form_store_rationale_70",
+      "service_available_formats",
+      "service_issue",
+      "service_rationale_113",
+      "service_rationale_129",
+      "service_rationale_139",
+      "service_resolve_inputs"
+    ],
+    "7": [
+      "declarativebase",
+      "form_store",
+      "form_store_default_form",
+      "form_store_find_forms",
+      "form_store_form_exists",
+      "form_store_list_forms",
+      "form_store_rationale_1",
+      "form_store_rationale_45",
+      "form_store_rationale_53",
+      "form_store_rationale_81",
+      "models",
+      "models_base",
+      "models_company",
+      "models_customer",
+      "models_documenttemplate",
+      "sqlalchemy",
+      "sqlalchemy_dialects_postgresql",
+      "sqlalchemy_orm"
+    ],
+    "8": [
+      "db_add_user",
+      "db_new_connection",
+      "db_rationale_33",
+      "getpass",
+      "pathlib",
+      "psycopg",
+      "scripts_migrate",
+      "scripts_migrate_main",
+      "scripts_migrate_move_dates_last",
+      "scripts_migrate_rationale_1",
+      "scripts_migrate_rationale_27",
+      "scripts_seed_forms",
+      "scripts_seed_users",
+      "scripts_seed_users_main",
+      "scripts_seed_users_rationale_1",
+      "sys"
+    ],
+    "9": [
+      "db_get_customer",
+      "db_rationale_96",
+      "form0_build_doc",
+      "form0_format_value",
+      "form0_rationale_132",
+      "form0_rationale_173",
+      "form0_rationale_60",
+      "form0_table_style",
+      "service",
+      "service_customer_inputs",
+      "service_rationale_1",
+      "service_rationale_190",
+      "service_rationale_40",
+      "service_to_date",
+      "service_validate_definition"
+    ],
+    "10": [
+      "migrations_000_transactions",
+      "migrations_000_transactions_idx_transactions_customer",
+      "migrations_000_transactions_transactions",
+      "migrations_001_users_audit_counter",
+      "migrations_001_users_audit_counter_audit_log",
+      "migrations_001_users_audit_counter_doc_counter",
+      "migrations_001_users_audit_counter_idx_audit_customer",
+      "migrations_001_users_audit_counter_idx_document_log_customer",
+      "migrations_001_users_audit_counter_sql_document_log",
+      "migrations_001_users_audit_counter_users",
+      "migrations_002_money_links_form_function",
+      "migrations_002_money_links_form_function_create_form_version",
+      "sql_setup",
+      "sql_setup_customers",
+      "sql_setup_document_templates"
+    ],
+    "11": [
+      "db_fetchall",
+      "db_forms_using_table",
+      "db_get_company_customers",
+      "db_get_custom_rows",
+      "db_get_transactions_between",
+      "db_rationale_120",
+      "db_rationale_133",
+      "db_rationale_174",
+      "db_rationale_268",
+      "db_rationale_276",
+      "db_set_company_logo",
+      "scripts_load_logos",
+      "scripts_load_logos_main",
+      "scripts_load_logos_rationale_1"
+    ],
+    "12": [
+      "db_add_custom_rows",
+      "db_delete_custom_table",
+      "db_get_connection",
+      "db_rationale_260",
+      "db_rationale_280",
+      "db_rationale_46",
+      "db_rationale_67",
+      "db_run_query",
+      "json",
+      "psycopg_types_json",
+      "scripts_sync_forms",
+      "scripts_sync_forms_main",
+      "scripts_sync_forms_rationale_1"
+    ],
+    "13": [
+      "form0_add_text",
+      "form0_line_below",
+      "form0_make_docx",
+      "form0_make_rtf",
+      "form0_rationale_372",
+      "form0_rationale_384",
+      "form0_rationale_391",
+      "form0_rationale_400",
+      "form0_rationale_463",
+      "form0_shade",
+      "pypandoc",
+      "tempfile"
+    ],
+    "14": [
+      "api_current_user",
+      "auth",
+      "auth_check_password",
+      "auth_hash_password",
+      "auth_rationale_1",
+      "auth_rationale_14",
+      "auth_rationale_20",
+      "hashlib",
+      "hmac",
+      "httpbasiccredentials",
+      "os"
+    ],
+    "15": [
+      "decimal",
+      "documents",
+      "documents_rationale_1",
+      "documents_rationale_43",
+      "documents_rationale_59",
+      "documents_register_fonts",
+      "documents_today_armenia",
+      "reportlab_pdfbase",
+      "reportlab_pdfbase_ttfonts",
+      "zoneinfo"
+    ],
+    "16": [
+      "base64",
+      "documents_has_logo",
+      "documents_logo_mime",
+      "documents_rationale_73",
+      "documents_rationale_77",
+      "form0_make_html",
+      "form0_rationale_222",
+      "form0_rationale_231",
+      "form0_shares"
+    ],
+    "17": [
+      "form0_make_pdf",
+      "form0_page_number",
+      "form0_para",
+      "form0_pdf_header",
+      "form0_pdf_table",
+      "form0_rationale_295",
+      "form0_rationale_302",
+      "form0_rationale_316",
+      "form0_rationale_342"
+    ],
+    "18": [
+      "app_edit_section",
+      "app_rationale_159",
+      "db_create_form_version",
+      "db_rationale_224",
+      "form_store_rationale_77",
+      "form_store_save_form",
+      "service_rationale_213",
+      "service_save_new_form_version"
+    ],
+    "19": [
+      "atexit",
+      "db",
+      "db_close_pool",
+      "db_rationale_1",
+      "db_rationale_37",
+      "dotenv",
+      "psycopg_pool"
+    ],
+    "20": [
+      "datetime",
+      "random",
+      "scripts_seed_demo",
+      "scripts_seed_demo_build_transactions",
+      "scripts_seed_demo_main",
+      "scripts_seed_demo_rationale_1",
+      "scripts_seed_demo_rationale_41"
+    ],
+    "21": [
+      "service_clean",
+      "service_columns_from_rows",
+      "service_custom_columns",
+      "service_rationale_168",
+      "service_rationale_172",
+      "service_rationale_227"
+    ],
+    "22": [
+      "documents_get_slogan",
+      "documents_rationale_65",
+      "form0_default_header",
+      "form0_rationale_123"
+    ],
+    "23": [
+      "form0_generate",
+      "form0_rationale_487",
+      "service_make_files",
+      "service_rationale_134"
+    ],
+    "24": [
+      "migrations_005_custom_tables",
+      "migrations_005_custom_tables_custom_rows",
+      "migrations_005_custom_tables_custom_tables",
+      "migrations_005_custom_tables_idx_custom_rows_table"
+    ],
+    "25": [
+      "form0_fill",
+      "form0_fill_put",
+      "form0_rationale_92"
+    ],
+    "26": [
+      "form0_money",
+      "form0_rationale_56",
+      "str"
+    ],
+    "27": [
+      "migrations_007_rtf_imports",
+      "migrations_007_rtf_imports_idx_rtf_imports_target",
+      "migrations_007_rtf_imports_rtf_imports"
+    ],
+    "28": [
+      "companies"
+    ],
+    "29": [
+      "migrations_003_drop_generated_documents"
+    ],
+    "30": [
+      "migrations_004_logos_in_database"
+    ],
+    "31": [
+      "sql_queries_audit_insert"
+    ],
+    "32": [
+      "sql_queries_balance_on_date"
+    ],
+    "33": [
+      "sql_queries_company_customer_count"
+    ],
+    "34": [
+      "sql_queries_company_customers"
+    ],
+    "35": [
+      "sql_queries_company_direction_totals"
+    ],
+    "36": [
+      "sql_queries_company_logo_by_id"
+    ],
+    "37": [
+      "sql_queries_company_logo_data"
+    ],
+    "38": [
+      "sql_queries_company_logo_set"
+    ],
+    "39": [
+      "sql_queries_company_summary"
+    ],
+    "40": [
+      "sql_queries_company_type_totals"
+    ],
+    "41": [
+      "sql_queries_custom_rows_add"
+    ],
+    "42": [
+      "sql_queries_custom_rows_count"
+    ],
+    "43": [
+      "sql_queries_custom_rows_get"
+    ],
+    "44": [
+      "sql_queries_custom_table_create"
+    ],
+    "45": [
+      "sql_queries_custom_table_delete"
+    ],
+    "46": [
+      "sql_queries_custom_table_forms"
+    ],
+    "47": [
+      "sql_queries_custom_table_get"
+    ],
+    "48": [
+      "sql_queries_custom_tables_count"
+    ],
+    "49": [
+      "sql_queries_custom_tables_search"
+    ],
+    "50": [
+      "sql_queries_customer_full"
+    ],
+    "51": [
+      "sql_queries_customer_get"
+    ],
+    "52": [
+      "sql_queries_customers_search"
+    ],
+    "53": [
+      "sql_queries_doc_content_get"
+    ],
+    "54": [
+      "sql_queries_doc_file_get"
+    ],
+    "55": [
+      "sql_queries_doc_file_insert"
+    ],
+    "56": [
+      "sql_queries_doc_files_get"
+    ],
+    "57": [
+      "sql_queries_doc_formats_get"
+    ],
+    "58": [
+      "sql_queries_doc_log_insert"
+    ],
+    "59": [
+      "sql_queries_doc_no_next"
+    ],
+    "60": [
+      "sql_queries_doc_same_find"
+    ],
+    "61": [
+      "sql_queries_form_create"
+    ],
+    "62": [
+      "sql_queries_issued_search"
+    ],
+    "63": [
+      "sql_queries_rtf_import_get"
+    ],
+    "64": [
+      "sql_queries_rtf_import_insert"
+    ],
+    "65": [
+      "sql_queries_transaction_get"
+    ],
+    "66": [
+      "sql_queries_tx_belongs"
+    ],
+    "67": [
+      "sql_queries_tx_between"
+    ],
+    "68": [
+      "sql_queries_tx_count"
+    ],
+    "69": [
+      "sql_queries_tx_search"
+    ],
+    "70": [
+      "sql_queries_user_get"
+    ],
+    "71": [
+      "sql_queries_user_insert"
+    ],
+    "72": [
+      "sql_seed_forms"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05839727195225917,
+    "1": 0.07777777777777778,
+    "2": 0.06620209059233449,
+    "3": 0.08292682926829269,
+    "4": 0.11,
+    "5": 0.1,
+    "6": 0.1437908496732026,
+    "7": 0.16993464052287582,
+    "8": 0.175,
+    "9": 0.18095238095238095,
+    "10": 0.1619047619047619,
+    "11": 0.16483516483516483,
+    "12": 0.1794871794871795,
+    "13": 0.16666666666666666,
+    "14": 0.2545454545454545,
+    "15": 0.2,
+    "16": 0.2222222222222222,
+    "17": 0.2777777777777778,
+    "18": 0.25,
+    "19": 0.2857142857142857,
+    "20": 0.38095238095238093,
+    "21": 0.3333333333333333,
+    "22": 0.5,
+    "23": 0.5,
+    "24": 0.8333333333333334,
+    "25": 0.6666666666666666,
+    "26": 0.6666666666666666,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0
+  },
+  "gods": [
+    {
+      "id": "queries_load",
+      "label": "load()",
+      "degree": 37
+    },
+    {
+      "id": "db_log_audit",
+      "label": "log_audit()",
+      "degree": 17
+    },
+    {
+      "id": "db_fetchall",
+      "label": "_fetchall()",
+      "degree": 16
+    },
+    {
+      "id": "db_get_connection",
+      "label": "get_connection()",
+      "degree": 16
+    },
+    {
+      "id": "db_fetchone",
+      "label": "_fetchone()",
+      "degree": 16
+    },
+    {
+      "id": "app_make_page",
+      "label": "make_page()",
+      "degree": 16
+    },
+    {
+      "id": "form0_build_doc",
+      "label": "build_doc()",
+      "degree": 16
+    },
+    {
+      "id": "armenian_encoding_fix",
+      "label": "fix()",
+      "degree": 15
+    },
+    {
+      "id": "pages_tables_show_rtf_import",
+      "label": "show_rtf_import()",
+      "degree": 13
+    },
+    {
+      "id": "pages_tables_show_table",
+      "label": "show_table()",
+      "degree": 13
+    }
+  ],
+  "surprises": [
+    {
+      "source": "cached_customer_count()",
+      "target": "get_company_customer_count()",
+      "source_files": [
+        "pages/companies.py",
+        "db.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "cached_customers()",
+      "target": "get_company_customers()",
+      "source_files": [
+        "pages/companies.py",
+        "db.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "cached_logo()",
+      "target": "get_company_logo_by_id()",
+      "source_files": [
+        "pages/companies.py",
+        "db.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "cached_summary()",
+      "target": "get_company_summary()",
+      "source_files": [
+        "pages/companies.py",
+        "db.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "show_company()",
+      "target": "get_slogan()",
+      "source_files": [
+        "pages/companies.py",
+        "documents.py"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "connects across different repos/directories; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `load()` connect `load` to `app.py`, `tables.py`, `api.py`, `make_page`, `seed_users.py`, `service.py`, `_fetchall`, `get_connection`, `edit_section`, `db.py`?",
+      "why": "High betweenness centrality (0.021) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `log_audit()` (e.g. with `issued_page()` and `make_page()`) actually correct?",
+      "why": "`log_audit()` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `app.py` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.05839727195225917 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `fix()` connect `rtf_import.py` to `load`, `make_page`, `form_store.py`, `get_connection`, `edit_section`, `db.py`?",
+      "why": "High betweenness centrality (0.019) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `tables.py` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07777777777777778 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `log_audit()` connect `app.py` to `tables.py`, `api.py`, `load`, `make_page`, `service.py`, `get_connection`, `edit_section`, `db.py`?",
+      "why": "High betweenness centrality (0.019) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `api.py` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.06620209059233449 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

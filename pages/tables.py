@@ -1,7 +1,7 @@
 """
 pages/tables.py
-Tables page: anyone logged in can add a table of their own (any columns), add rows by hand or
-from a CSV, and search the list. Everything is stored in the database (custom_tables and
+Tables page: anyone logged in can add a table of their own (any columns), add rows by hand, from a CSV
+or from an RTF file (old Armenian fonts are converted), and search the list. Everything is stored in the database (custom_tables and
 custom_rows), so others can use it later, also as the data of a form.
 The list shows 3 tables; a button shows all. Opening a table shows its rows (paged).
 """
@@ -18,6 +18,7 @@ import streamlit as st
 from db import count_custom_rows, count_custom_tables, search_custom_tables
 from documents import DATE_FORMAT
 from form0 import format_cell
+from rtf_import import apply_plan, decide, default_name, hits, known_names, read_rtf
 from service import (CUSTOM_TYPES, add_rows, create_table, delete_table, get_table,
                      import_csv, table_rows)
 from ui import require_login, show_error
@@ -25,6 +26,8 @@ from ui import require_login, show_error
 TABLE_LIMIT = 3            # tables shown before "Show all"
 TABLE_ALL_LIMIT = 200
 ROWS_PER_PAGE = 20
+PREVIEW_ROWS = 20
+RTF_KINDS = {"table": "Table (many rows)", "row": "One row", "form": "Form (letter / certificate)"}
 
 # ============================================================
 # 2. SMALL HELPERS
@@ -68,6 +71,91 @@ def show_new_table(user):
                 return
             st.session_state["open_table"] = name.strip().lower()
             done("Table created. Add rows below.")
+
+# ============================================================
+# 3b. IMPORT AN RTF FILE (old Armenian fonts become Unicode; the page decides what the file is)
+# ============================================================
+
+@st.cache_data(show_spinner=False, max_entries=5)
+def read_cached(data):
+    """Reading runs pandoc, so do it once per file, not on every redraw."""
+    return read_rtf(data)
+
+def unique(headings):
+    """Headings for the preview: empty or repeated ones get a number."""
+    seen, result = set(), []
+    for i, h in enumerate(headings, start=1):
+        label = h if h and h not in seen else (h or "column") + " " + str(i)
+        seen.add(label)
+        result.append(label)
+    return result
+
+def show_rtf_import(user):
+    table = None
+    if st.session_state.get("open_table"):
+        try:
+            table = get_table(st.session_state["open_table"])
+        except ValueError:
+            table = None
+    with st.expander("📄 Import Word / RTF Document or Table"):
+        g = gen()
+        st.caption("Upload an RTF or Word document. Armenian text is automatically converted to Unicode. "
+                   "The file is automatically recognized as a reusable form template or a data table."
+                   + (" Currently viewing table: '" + table["name"] + "'." if table else ""))
+        upload = st.file_uploader("Choose RTF file", type="rtf", key="rtf_file_" + g,
+                                  help="Drag and drop any .rtf file from Word or banking software")
+        if upload is None:
+            return
+        try:
+            paragraphs, tables = read_cached(upload.getvalue())
+            found = decide(paragraphs, tables, table)
+        except ValueError as e:
+            st.error(str(e))
+            return
+        options = found["options"]
+        kinds = list(options)
+        key = g + "_" + upload.name + "_" + str(upload.size)
+        kind = st.radio("Document Type:", kinds, index=kinds.index(found["kind"]), horizontal=True,
+                        format_func=RTF_KINDS.get, key="rtf_kind_" + key)
+        plan = options[kind]
+
+        if kind == "form":
+            st.subheader(plan["title"] or "Untitled Document")
+            if plan.get("placeholders"):
+                st.markdown("**Fillable fields detected:** " + " ".join("`{{" + p + "}}`" for p in plan["placeholders"]))
+            with st.container(border=True):
+                for text in plan["paragraphs"][:PREVIEW_ROWS]:
+                    st.write(text)
+                if len(plan["paragraphs"]) > PREVIEW_ROWS:
+                    st.caption("... and " + str(len(plan["paragraphs"]) - PREVIEW_ROWS) + " more paragraphs")
+            adds = False
+        else:
+            st.dataframe(pd.DataFrame(plan["rows"][:PREVIEW_ROWS], columns=unique(plan["headings"])),
+                         hide_index=True, width="stretch")
+            st.caption(str(len(plan["rows"])) + " row(s), " + str(len(plan["headings"])) + " column(s)")
+            adds = bool(table) and hits(plan["headings"], known_names(table)) * 2 >= len(plan["headings"])
+
+        name = ""
+        if adds:
+            st.info("The rows will automatically be added to the open table '" + table["name"] + "'.")
+        else:
+            label = "Document Title" if kind == "form" else "Table Name"
+            suggested = plan.get("title") or default_name(upload.name).replace("_", " ").title()
+            user_title = st.text_input(label, value=suggested, key="rtf_name_" + key + kind,
+                                       help="Give this document a recognizable name")
+            name = default_name(user_title)
+
+        save_label = "💾 Save Reusable Template" if kind == "form" else ("➕ Add Rows to Table" if adds else "💾 Create Table")
+        if st.button(save_label, type="primary", key="rtf_go_" + key + kind):
+            try:
+                message = apply_plan(kind, plan, table, name, user["name"],
+                                     upload.name, upload.getvalue())
+            except ValueError as e:
+                st.error(str(e))
+                return
+            if kind != "form" and not adds:
+                st.session_state["open_table"] = name
+            done(message)
 
 def toggle_all():
     st.session_state["all_tables"] = not st.session_state.get("all_tables", False)
@@ -179,6 +267,7 @@ def main():
         st.success(message)
     try:
         show_new_table(user)
+        show_rtf_import(user)
         show_list()
         if st.session_state.get("open_table"):
             show_table(user, st.session_state["open_table"])

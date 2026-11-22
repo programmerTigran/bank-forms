@@ -16,6 +16,7 @@ from psycopg_pool import ConnectionPool
 from dotenv import load_dotenv
 
 from queries import load
+from armenian_encoding import fix
 
 load_dotenv()
 
@@ -50,6 +51,15 @@ def get_connection():
                                kwargs={"options": "-c statement_timeout=30000"})   # a query may run 30 s at most
     return _pool.connection()
 
+def ping():
+    """Verify database connection is alive."""
+    try:
+        with get_connection() as conn:
+            conn.execute("SELECT 1")
+            return True
+    except Exception:
+        return False
+
 def _fetchall(sql, params=None):
     with get_connection() as conn:
         return conn.execute(sql, params or {}).fetchall()
@@ -66,7 +76,7 @@ def run_query(name, params):
     """Run sql/<name>.sql. Returns (column_names, rows)."""
     with get_connection() as conn:
         cur = conn.execute(load(name), params)
-        return [d.name for d in cur.description], cur.fetchall()
+        return [d.name for d in cur.description], fix(cur.fetchall())
 
 # ============================================================
 # 3. USERS AND AUDIT
@@ -223,7 +233,7 @@ def create_form_version(name, definition):
     """Add a new version of a form through the database function. Returns the version number."""
     try:
         return _fetchone(load("form_create"),
-                         {"name": name, "definition": json.dumps(definition, ensure_ascii=False)})[0]
+                         {"name": name, "definition": json.dumps(fix(definition), ensure_ascii=False)})[0]
     except psycopg.errors.RaiseException as e:   # the function's own messages
         raise ValueError(e.diag.message_primary)
 
@@ -235,8 +245,8 @@ def create_custom_table(name, title, description, columns, username):
     """Save a new table definition. Returns its table_id. ValueError if the name is taken."""
     try:
         return _fetchone(load("custom_table_create"),
-                         {"name": name, "title": title, "description": description,
-                          "columns": json.dumps(columns, ensure_ascii=False),
+                         {"name": name, "title": fix(title), "description": fix(description),
+                          "columns": json.dumps(fix(columns), ensure_ascii=False),
                           "username": username})[0]
     except psycopg.errors.UniqueViolation:
         raise ValueError("A table named '" + name + "' already exists")
@@ -260,7 +270,7 @@ def add_custom_rows(table_id, rows, username):
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.executemany(load("custom_rows_add"),
-                            [{"table_id": table_id, "data": json.dumps(r, ensure_ascii=False),
+                            [{"table_id": table_id, "data": json.dumps(fix(r), ensure_ascii=False),
                               "username": username} for r in rows])
 
 def get_custom_rows(table_id, limit=20, offset=0):
@@ -279,3 +289,24 @@ def delete_custom_table(table_id):
     """Delete a table and (by the database link) all its rows."""
     with get_connection() as conn:
         conn.execute(load("custom_table_delete"), {"table_id": table_id})
+
+# ============================================================
+# 10. ORIGINAL RTF FILES (kept as uploaded on the Tables page)
+# ============================================================
+
+def ensure_rtf_imports_table():
+    """Ensure rtf_imports exists in PostgreSQL so operations never fail if migration wasn't run."""
+    with get_connection() as conn:
+        conn.execute(load("rtf_imports_ensure"))
+
+def save_rtf_file(filename, kind, target, data, username):
+    """Keep the original RTF bytes. Returns the import_id."""
+    ensure_rtf_imports_table()
+    return _fetchone(load("rtf_import_insert"),
+                     {"filename": filename, "kind": kind, "target": target,
+                      "data": data, "username": username})[0]
+
+def get_rtf_file(import_id):
+    """(filename, bytes) of a kept RTF file, or None."""
+    row = _fetchone(load("rtf_import_get"), {"import_id": import_id})
+    return (row[0], bytes(row[1])) if row else None

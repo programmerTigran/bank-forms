@@ -1,4 +1,4 @@
--- 007: tables that users create themselves (any kind of info), stored in the database.
+-- 005: tables that users create themselves (any kind of info), stored in the database.
 -- custom_tables = the definition (name, title, columns); custom_rows = the rows (JSON per row).
 -- The app never runs CREATE TABLE for users: it only writes rows into these two tables.
 CREATE TABLE IF NOT EXISTS custom_tables (

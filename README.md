@@ -111,8 +111,9 @@ row numbers, columns to add up). Column types: text, date, money, number.
 Add the next file in `migrations/` (for example `007_city.sql`) and run
 `python scripts/migrate.py`. Each file runs once, in one transaction; if it fails, nothing from
 it is saved. The runner uses the same database as the app. Rule: the date column
-(`created_at`, `tx_date`, `applied_at`) is the last column of a table. The runner moves it back
-by itself after a new column was added, and keeps its indexes and rules.
+(`created_at`, `tx_date`, `applied_at`) is the last column of a table. `migrate.py` moves it back
+to the end by itself after every run, so you only write `ALTER TABLE ... ADD COLUMN`.
+To cover another column name, add it to `DATE_COLUMNS` in `scripts/migrate.py`.
 
 ## API
 

@@ -8,19 +8,22 @@ Every call needs HTTP Basic login (a user from the users table).
 
 import logging
 
-from fastapi import Depends, FastAPI, HTTPException, Query, Response
+from fastapi import Depends, FastAPI, File, HTTPException, Query, Response, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 
 import service
-from auth import check_password
-from db import (get_company_summary, get_issued_files, get_user, log_audit,
-                search_customers, search_issued)
+from auth import check_password, hash_password
+from db import (get_company_summary, get_issued_files, get_user, log_audit, ping,
+                search_customers, search_custom_tables, search_issued)
 from form0 import MIME
 from form_store import find_forms, list_versions, load_form
+from rtf_import import apply_plan, decide, default_name, read_rtf
 
 log = logging.getLogger("bank_forms")
+MAX_RTF_BYTES = 5 * 1024 * 1024
+_DUMMY_HASH = hash_password("not-a-real-password")   # so an unknown user takes as long as a wrong password
 app = FastAPI(title="Bank forms API")
 security = HTTPBasic()
 
@@ -30,6 +33,8 @@ security = HTTPBasic()
 
 def current_user(creds: HTTPBasicCredentials = Depends(security)):
     user = get_user(creds.username)
+    if user is None:
+        check_password(creds.password, _DUMMY_HASH)
     if not user or not check_password(creds.password, user[2]):
         raise HTTPException(401, "Wrong username or password",
                             headers={"WWW-Authenticate": "Basic"})
@@ -58,7 +63,10 @@ class FormBody(BaseModel):
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    db_alive = ping()
+    if not db_alive:
+        return JSONResponse(status_code=503, content={"status": "degraded", "database": "unavailable"})
+    return {"status": "ok", "database": "connected"}
 
 @app.get("/forms")
 def forms(term: str = "", limit: int = Query(20, ge=1, le=200), user=Depends(current_user)):
@@ -121,3 +129,41 @@ def companies(user=Depends(current_user)):
     return {"companies": [{"company_id": r[0], "name": r[1], "customers": r[3],
                            "transactions": r[4], "total": str(r[5])}   # exact, as text
                           for r in get_company_summary()]}
+
+# ============================================================
+# 5. RTF IMPORT & CUSTOM TABLES
+# ============================================================
+
+@app.post("/import/rtf", status_code=201)
+async def import_rtf(file: UploadFile = File(...), name: str = "", user=Depends(admin_only)):
+    """Upload an RTF file (up to 5MB) to import as a reusable form template or data table."""
+    data = await file.read(MAX_RTF_BYTES + 1)      # never load more than the limit into memory
+    if len(data) > MAX_RTF_BYTES:
+        raise HTTPException(413, "File exceeds 5MB limit")
+    try:
+        paras, tables = read_rtf(data)
+        found = decide(paras, tables)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+    kind = found["kind"]
+    plan = found["options"][kind]
+    target_name = default_name(name) if name else default_name(file.filename or "import")
+    msg = apply_plan(kind, plan, None, target_name, user["name"], file.filename or "", data)
+    return {"status": "success", "kind": kind, "target": target_name, "message": msg}
+
+@app.get("/tables")
+def list_tables(term: str = "", limit: int = Query(50, ge=1, le=200), user=Depends(current_user)):
+    """List custom tables stored in the database."""
+    rows = search_custom_tables(term.strip(), limit)
+    return {"tables": [{"table_id": r[0], "name": r[1], "title": r[2], "columns": r[4], "rows": r[5]}
+                       for r in rows]}
+
+@app.get("/tables/{name}")
+def get_table_details(name: str, user=Depends(current_user)):
+    """Fetch schema and details for a specific custom table."""
+    try:
+        tbl = service.get_table(name)
+    except ValueError as e:
+        raise HTTPException(404, str(e))
+    return tbl

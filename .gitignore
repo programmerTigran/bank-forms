@@ -9,6 +9,9 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# Graphify output (rebuild with: graphify extract . --code-only)
+graphify-out/
+
 # Backups, archives and OS junk
 backups/
 *.backup

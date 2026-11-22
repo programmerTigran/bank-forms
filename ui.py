@@ -4,17 +4,25 @@ Small Streamlit helpers shared by app.py and pages/ (not the screen itself):
 login, current user, and errors that are logged but not shown in detail.
 """
 
+# ============================================================
+# 1. IMPORTS AND CONSTANTS
+# ============================================================
+
+from service import get_table
 import logging
 import pandas as pd
 import streamlit as st
 from auth import check_password
 from db import get_user, search_custom_tables
 from form0 import COLUMN_TYPES, LINE_STYLES, TABLE_DEFAULTS
-from service import get_table
 
 log = logging.getLogger("bank_forms")
 
 LOGIN_ON = False   # False = no login screen, you are "dev" (admin). Set True to turn the login back on.
+
+# ============================================================
+# 2. LOGIN AND ERRORS
+# ============================================================
 
 def show_error(text, e):
     """Log the real error, show the user only a generic message."""
@@ -58,6 +66,10 @@ def require_login():
             st.rerun()
     return user
 
+
+# ============================================================
+# 3. FORM EDITOR BOXES AND HELP
+# ============================================================
 
 def table_fields(form, tag):
     """The 'Table' boxes of the form editor. Returns what the user chose:
@@ -111,7 +123,6 @@ def table_fields(form, tag):
                             "font_size": int(font_size), "lines": lines, "zebra": zebra,
                             "row_numbers": numbers,
                             "totals": [x.strip() for x in totals.split(",") if x.strip()]}}
-
 
 # What can be written as {{name}} in a form's text, by the inputs the form has.
 FIELD_HELP = {

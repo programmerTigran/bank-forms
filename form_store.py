@@ -14,6 +14,7 @@ Used by service.py and app.py.
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from db import create_form_version
+from armenian_encoding import fix
 from models import engine, DocumentTemplate
 
 # ============================================================
@@ -63,7 +64,7 @@ def load_form(name, version=None):
         row = s.scalars(q.order_by(DocumentTemplate.version.desc()).limit(1)).first()
         if row is None:
             raise ValueError("Template " + name + " not found")
-        return row.definition
+        return fix(row.definition)
 
 def list_versions(name):
     """All version numbers of a form, newest first."""

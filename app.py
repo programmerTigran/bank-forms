@@ -24,7 +24,6 @@ from form0 import build_doc, generate, default_header, unfilled_placeholders, MI
 from service import (MAX_TABLE_ROWS, columns_from_rows, fetch_rows, TX_TYPES, as_of_inputs, available_formats, customer_inputs,
                      date_range_inputs, filter_inputs, make_files, save_new_form_version,
                      transaction_inputs)
-from armenian_encoding import fonitech_to_unicode
 from ui import require_login, current_user, show_error, table_fields, fields_help
 
 # ============================================================

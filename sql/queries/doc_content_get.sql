@@ -1,1 +1,0 @@
-SELECT content FROM document_log WHERE doc_no = %(doc_no)s

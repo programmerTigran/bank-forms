@@ -68,10 +68,12 @@ def date_range_inputs(date_from, date_to):
         raise ValueError("'From' must be before 'To'.")
     values = {"date_from": date_from.strftime(DATE_FORMAT),
               "date_to": date_to.strftime(DATE_FORMAT)}
+    values["start_date"], values["end_date"] = values["date_from"], values["date_to"]
     return values, {"date_from": date_from, "date_to": date_to}
 
 def as_of_inputs(as_of):
-    return {"as_of": as_of.strftime(DATE_FORMAT)}, {"as_of": as_of}
+    text = as_of.strftime(DATE_FORMAT)
+    return {"as_of": text, "date": text}, {"as_of": as_of}
 
 def filter_inputs(tx_types=None, min_amount=None, max_amount=None, search=""):
     tx_types = list(tx_types or [])

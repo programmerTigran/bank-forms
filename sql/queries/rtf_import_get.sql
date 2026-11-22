@@ -1,0 +1,1 @@
+SELECT filename, data FROM rtf_imports WHERE import_id = %(import_id)s

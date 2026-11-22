@@ -196,6 +196,8 @@ def build_doc(form, values, col_names, rows, doc_no="DRAFT"):
     values = dict(values)
     values["count"] = len(table)
     values["current_date"] = today_armenia()
+    values["today"] = values["current_date"]
+    values.setdefault("date", values["current_date"])
     values["company_name"] = values.get("company_name", "")
     values["slogan"] = get_slogan(values["company_name"]) if values.get("company_name") else ""
     if not columns and rows:
@@ -204,7 +206,7 @@ def build_doc(form, values, col_names, rows, doc_no="DRAFT"):
     header["company"] = fill(header["company"], values)
     header["slogan"] = fill(header["slogan"], values)
     header["right_lines"] = [fill(x, values) for x in header["right_lines"]] + ["No: " + doc_no]
-    footer = {**DEFAULT_FOOTER, **form.get("footer", {})}
+    footer = {k: fill(v, values) for k, v in {**DEFAULT_FOOTER, **form.get("footer", {})}.items()}
     info = [fill(line, values) for line in form.get("info_lines", [])]
     if values.get("filter_line"):
         info.append(values["filter_line"])
